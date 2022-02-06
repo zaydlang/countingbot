@@ -18,6 +18,10 @@ class CountingBot(commands.Bot):
         @self.event
         async def on_message(message):
             response = self.core.get_response_to_message(message.content)
+            
+            if message.author.bot:
+                return
+
 
             if response != None:
                 await message.channel.send(response)

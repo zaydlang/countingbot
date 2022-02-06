@@ -1,8 +1,11 @@
 from frontend.config import Config
 
+import wolframalpha
+
 class Core:
     def __init__(self, config):
         self.config = config
+        self.wa_client = wolframalpha.Client(config.wa_app_id);
 
         self.reset()
     
@@ -15,9 +18,15 @@ class Core:
     # should be sent. well, at some point itll return an embed.
     # for now ill return a string for testing.
     def get_response_to_message(self, message):
-        if self.currently_counting:
-            return self.get_response_to_message__counting(message)
-        return None
+        full_result = self.wa_client.query('evaluate ' + message)
+        print(full_result)
+        print(next(full_result.results).text)
+        # result_pod = [pod for pod in full_result['pod'] if pod['@title'] == 'Result'][0]
+        
+        # if len(result_pod) == 0:
+        #     return
+
+        return next(full_result.results).text
     
     def get_response_to_message__counting(self, message):
         try:
